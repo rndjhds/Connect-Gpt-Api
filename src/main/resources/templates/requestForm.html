@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<form action="requestForm" method="post">
+
+  <input type="text" name="message" id="message" placeholder="메시지를 입력하세요">
+  <input type="button" value="send" onclick="getResponseMessage()">
+
+</form>
+
+</body>
+</html>
+
+<script type="text/javascript">
+
+    function getResponseMessage() {
+        var message = $("#message").val();
+
+        $.ajax({
+            type : "POST",
+            url : "/requestMessageToGpt",
+            data : {
+                message : message
+            },
+            success : function (data) {
+                if(data != null){
+                    console.log(data);
+                }
+            }
+        });
+    }
+</script>
