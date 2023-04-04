@@ -8,6 +8,14 @@ public class GptRequest {
 
     private List<GptRequestMessages> messages;
 
+    @Override
+    public String toString() {
+        return "GptRequest{" +
+                "model='" + model + '\'' +
+                ", messages=" + messages +
+                '}';
+    }
+
     public String getModel() {
         return model;
     }
