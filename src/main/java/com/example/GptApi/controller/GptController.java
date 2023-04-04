@@ -2,7 +2,6 @@ package com.example.GptApi.controller;
 
 import com.example.GptApi.service.GptService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,8 +12,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Slf4j
 public class GptController {
 
-    @Autowired
-    private GptService gptService;
+    private final GptService gptService;
+
+    public GptController(GptService gptService) {
+        this.gptService = gptService;
+    }
 
     @GetMapping("/requestForm")
     public String requestForm() {

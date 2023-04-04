@@ -27,32 +27,46 @@ public class GptServiceImpl implements GptService {
     public String responseGptApi(String message) {
 
         try {
-            log.info("GPT로 넘어갈 요청 데이터 : " + message);
+            // GPT 기본 설정 세팅
+            // 입력내용을 -> JSON형식의 GPT용 요청 객체로 변환 ?..
+            // HttpClient 설정 준비 ... (post, json, time oust.
+            // GPT API 요청 전송
+            // GPT API 응답 수신
+            // 화면출력을 위한 메시지 추출 처리 ? 필요할 지모르겠네.
+
 
             GptRequest gptRequest = new GptRequest();
             gptRequest.setModel("gpt-3.5-turbo");
+            // gptRequest set
 
             GptRequestMessages gptRequestMessages = new GptRequestMessages();
             gptRequestMessages.setRole("user");
             gptRequestMessages.setContent(message);
+            // gptRequestMessage  set
 
             List<GptRequestMessages> gptRequestMessagesList = new ArrayList<>();
             gptRequestMessagesList.add(gptRequestMessages);
             gptRequest.setMessages(gptRequestMessagesList);
+            // List에 gptRequestMessage set
 
             Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
             String gptRequestJsonObject = gson.toJson(gptRequest);
+            // gson으로 gptReqeust를Json set
 
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(openAiKey);
             headers.add("Content-type", "application/json");
+            // http header set
 
             HttpEntity<String> httpEntity = new HttpEntity<>(gptRequestJsonObject, headers);
             String openAiUrl = "https://api.openai.com/v1/chat/completions";
             RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<String> gptResponseEntity = restTemplate.exchange(openAiUrl, HttpMethod.POST, httpEntity, String.class);
 
-            log.info("GPT에게 응답 받은 전체 response 데이터 : " + gptResponseEntity.getBody());
+            log.info("GPT 요청 데이터 : " +  httpEntity.toString());
+
+            ResponseEntity<String> gptResponseEntity = restTemplate.exchange(openAiUrl, HttpMethod.POST, httpEntity, String.class);
+            // 요청 전송
+            log.info("GPT 응답 데이터 : " + gptResponseEntity.getBody());
 
             JsonObject gptResponseJsonObject = gson.fromJson(gptResponseEntity.getBody(), JsonObject.class);
 
@@ -62,9 +76,8 @@ public class GptServiceImpl implements GptService {
                 response = gptResponseMessage.getAsJsonObject().get("content").getAsString();
             }
 
-            log.info("GPT에게 응답 받은 요청에 대한 메시지 : " + response);
-
             return response;
+            // 응답 완료 후 데이터 처리
         } catch (RestClientException e) {
             return "서버 응답 에러가 발생했습니다.";
         } catch (JsonSyntaxException e) {
