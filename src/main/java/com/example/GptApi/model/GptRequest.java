@@ -1,5 +1,6 @@
 package com.example.GptApi.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GptRequest {
@@ -30,5 +31,9 @@ public class GptRequest {
 
     public void setMessages(List<GptRequestMessages> messages) {
         this.messages = messages;
+    }
+
+    public void addMessage(GptRequestMessages messages) {
+        this.messages.add(messages);
     }
 }

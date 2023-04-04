@@ -2,6 +2,7 @@ package com.example.GptApi.service;
 
 import com.example.GptApi.model.GptRequest;
 import com.example.GptApi.model.GptRequestMessages;
+import com.example.GptApi.repository.GptRepository;
 import com.google.gson.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +20,12 @@ import java.util.List;
 @Service
 @Slf4j
 public class GptServiceImpl implements GptService {
+
+    private final GptRepository gptRepository;
+
+    public GptServiceImpl(GptRepository gptRepository) {
+        this.gptRepository = gptRepository;
+    }
 
     @Value("${open_ai_key}")
     private String openAiKey;
@@ -42,6 +49,9 @@ public class GptServiceImpl implements GptService {
             GptRequestMessages gptRequestMessages = new GptRequestMessages();
             gptRequestMessages.setRole("user");
             gptRequestMessages.setContent(message);
+
+            gptRepository.saveGptResponse(gptRequestMessages);
+            log.info("!!!!!!!! {}", gptRepository.listGptRequestMessages());
             // gptRequestMessage  set
 
             List<GptRequestMessages> gptRequestMessagesList = new ArrayList<>();
@@ -62,7 +72,7 @@ public class GptServiceImpl implements GptService {
             String openAiUrl = "https://api.openai.com/v1/chat/completions";
             RestTemplate restTemplate = new RestTemplate();
 
-            log.info("GPT 요청 데이터 : " +  httpEntity.toString());
+            log.info("GPT 요청 데이터 : " + httpEntity.toString());
 
             ResponseEntity<String> gptResponseEntity = restTemplate.exchange(openAiUrl, HttpMethod.POST, httpEntity, String.class);
             // 요청 전송
