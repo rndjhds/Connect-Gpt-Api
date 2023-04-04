@@ -2,9 +2,7 @@ package com.example.GptApi.service;
 
 import com.example.GptApi.model.GptRequest;
 import com.example.GptApi.model.GptRequestMessages;
-import com.example.GptApi.model.GptResponse;
 import com.google.gson.*;
-import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -37,18 +35,18 @@ public class GptServiceImpl implements GptService {
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth("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");
+        headers.setBearerAuth("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");
         headers.add("Content-type", "application/json");
 
         HttpEntity<String> httpEntity = new HttpEntity<>(jsonObject, headers);
         ResponseEntity<String> response = restTemplate.exchange("https://api.openai.com/v1/chat/completions", HttpMethod.POST, httpEntity, String.class);
 
-        log.info(response.getBody());
+        log.info("GPT에게 응답 받은 response 데이터 : " + response.getBody());
 
         JsonObject gptResponse = gson.fromJson(response.getBody(), JsonObject.class);
 
         String text = null;
-        for (JsonElement jsonElement : gptResponse.getAsJsonArray("choices")){
+        for (JsonElement jsonElement : gptResponse.getAsJsonArray("choices")) {
             JsonElement message1 = jsonElement.getAsJsonObject().get("message");
             text = message1.getAsJsonObject().get("content").getAsString();
         }

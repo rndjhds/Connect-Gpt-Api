@@ -13,6 +13,7 @@
   <input type="button" value="send" onclick="getResponseMessage()">
 
 </form>
+<div id="responseMessage"></div>
 
 </body>
 </html>
@@ -31,6 +32,7 @@
             success : function (data) {
                 if(data != null){
                     console.log(data);
+                    $("#responseMessage").text(data);
                 }
             }
         });
