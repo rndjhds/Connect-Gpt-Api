@@ -7,10 +7,10 @@
 </head>
 <body>
 
-<form action="requestForm" method="post">
+<form action="requestForm" method="post" id="requestForm">
 
-  <input type="text" name="requestMessage" id="requestMessage" placeholder="메시지를 입력하세요">
-  <input type="button" value="send" onclick="getResponseMessage()">
+    <input type="text" name="requestMessage" id="requestMessage" placeholder="메시지를 입력하세요">
+    <input type="button" value="send" onclick="getResponseMessage()">
 
 </form>
 <div id="responseMessage"></div>
@@ -24,13 +24,13 @@
         var requestMessage = $("#requestMessage").val();
 
         $.ajax({
-            type : "POST",
-            url : "/requestMessageToGpt",
-            data : {
-                requestMessage : requestMessage
+            type: "POST",
+            url: "/requestMessageToGpt",
+            data: {
+                requestMessage: requestMessage
             },
-            success : function (data) {
-                if(data != null){
+            success: function (data) {
+                if (data != null) {
                     $("#responseMessage").text(data);
                 }
             }

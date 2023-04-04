@@ -58,8 +58,8 @@ public class GptServiceImpl implements GptService {
 
             String response = null;
             for (JsonElement gptResponseJsonElement : gptResponseJsonObject.getAsJsonArray("choices")) {
-                JsonElement jsonResponseMessage = gptResponseJsonElement.getAsJsonObject().get("message");
-                response = jsonResponseMessage.getAsJsonObject().get("content").getAsString();
+                JsonElement gptResponseMessage = gptResponseJsonElement.getAsJsonObject().get("message");
+                response = gptResponseMessage.getAsJsonObject().get("content").getAsString();
             }
 
             log.info("GPT에게 응답 받은 요청에 대한 메시지 : " + response);
