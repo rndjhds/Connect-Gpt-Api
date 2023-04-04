@@ -1,6 +1,5 @@
 package com.example.GptApi.controller;
 
-import com.example.GptApi.model.GptResponse;
 import com.example.GptApi.service.GptService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +23,14 @@ public class GptController {
 
     @PostMapping("/requestMessageToGpt")
     @ResponseBody
-    public String  requestMessageToGpt(@RequestParam("message") String message) {
-        log.info("요청 데이터 : " + message);
+    public String requestMessageToGpt(@RequestParam("requestMessage") String requestMessage) {
 
-        String  getResponse = gptService.responseGptApi(message);
+        log.info("요청 데이터 : " + requestMessage);
 
-        return getResponse;
+        String responseMessage = gptService.responseGptApi(requestMessage);
+
+        log.info("응답 데이터 : " + responseMessage);
+
+        return responseMessage;
     }
 }
