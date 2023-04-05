@@ -41,50 +41,48 @@ public class GptServiceImpl implements GptService {
             // GPT API 응답 수신
             // 화면출력을 위한 메시지 추출 처리 ? 필요할 지모르겠네.
 
-
-            GptRequest gptRequest = new GptRequest();
-            gptRequest.setModel("gpt-3.5-turbo");
-            // gptRequest set
-
-            GptRequestMessages gptRequestMessages = new GptRequestMessages();
+            GptRequestMessages gptRequestMessages = new GptRequestMessages(); // GptRequestMessages의 객체 생성
             gptRequestMessages.setRole("user");
-            gptRequestMessages.setContent(message);
+            gptRequestMessages.setContent(message); // GptRequestMessages의 인스턴스에 필드 값 set
 
-            gptRepository.saveGptResponse(gptRequestMessages);
+            gptRepository.saveGptResponse(gptRequestMessages); // GptRequestMessages의 객체 List메모리 저장소에 저장
             log.info("!!!!!!!! {}", gptRepository.listGptRequestMessages());
-            // gptRequestMessage  set
 
-            List<GptRequestMessages> gptRequestMessagesList = new ArrayList<>();
-            gptRequestMessagesList.add(gptRequestMessages);
-            gptRequest.setMessages(gptRequestMessagesList);
-            // List에 gptRequestMessage set
+            GptRequest gptRequest = new GptRequest(); // GptRequest의 객체 생성 후
+            gptRequest.setModel("gpt-3.5-turbo"); // GptRequest의 인스턴스에 필드값 set
+            gptRequest.setMessages(gptRepository.listGptRequestMessages());  // GptRequest인스턴스의 Message에 List메모리 저장소 저장
 
-            Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
-            String gptRequestJsonObject = gson.toJson(gptRequest);
-            // gson으로 gptReqeust를Json set
+            Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create(); // Gson 객체 생성
+            String gptRequestJsonObject = gson.toJson(gptRequest); // gptRequest를 Json형식으로 변형
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setBearerAuth(openAiKey);
-            headers.add("Content-type", "application/json");
-            // http header set
+            HttpHeaders headers = new HttpHeaders(); // HttpClient의 header 객체 생성
+            headers.setBearerAuth(openAiKey); // header의 인증키 set
+            headers.add("Content-type", "application/json"); // header의 Content-type set
 
-            HttpEntity<String> httpEntity = new HttpEntity<>(gptRequestJsonObject, headers);
-            String openAiUrl = "https://api.openai.com/v1/chat/completions";
-            RestTemplate restTemplate = new RestTemplate();
+            HttpEntity<String> httpEntity = new HttpEntity<>(gptRequestJsonObject, headers); // HttpClient 전송을 위한 header와 body 설정
+            String openAiUrl = "https://api.openai.com/v1/chat/completions"; // open Ai의 URL 설정
+            RestTemplate restTemplate = new RestTemplate(); // spring 프레임워크의 http call 메서드 생성
 
             log.info("GPT 요청 데이터 : " + httpEntity.toString());
 
-            ResponseEntity<String> gptResponseEntity = restTemplate.exchange(openAiUrl, HttpMethod.POST, httpEntity, String.class);
+            ResponseEntity<String> gptResponseEntity = restTemplate.exchange(openAiUrl, HttpMethod.POST, httpEntity, String.class); // 요청 보내기 후 응답 받음
             // 요청 전송
             log.info("GPT 응답 데이터 : " + gptResponseEntity.getBody());
 
-            JsonObject gptResponseJsonObject = gson.fromJson(gptResponseEntity.getBody(), JsonObject.class);
+            JsonObject gptResponseJsonObject = gson.fromJson(gptResponseEntity.getBody(), JsonObject.class); // String형태로 넘어온 body값 JsonObject로 변형
 
-            String response = null;
+            String response = "";
+            String role = "";
             for (JsonElement gptResponseJsonElement : gptResponseJsonObject.getAsJsonArray("choices")) {
                 JsonElement gptResponseMessage = gptResponseJsonElement.getAsJsonObject().get("message");
                 response = gptResponseMessage.getAsJsonObject().get("content").getAsString();
+                role =  gptResponseMessage.getAsJsonObject().get("role").getAsString();
             }
+
+            GptRequestMessages requestMessages = new GptRequestMessages();
+            requestMessages.setContent(response);
+            requestMessages.setRole(role);
+            gptRepository.saveGptResponse(requestMessages);
 
             return response;
             // 응답 완료 후 데이터 처리
