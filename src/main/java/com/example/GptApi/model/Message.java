@@ -1,6 +1,6 @@
 package com.example.GptApi.model;
 
-public class GptRequestMessages {
+public class Message {
 
     private String role;
 

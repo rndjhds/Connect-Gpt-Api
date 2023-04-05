@@ -1,7 +1,7 @@
 package com.example.GptApi.service;
 
-import com.example.GptApi.model.GptRequest;
-import com.example.GptApi.model.GptRequestMessages;
+import com.example.GptApi.model.ChatCompletion;
+import com.example.GptApi.model.Message;
 import com.example.GptApi.repository.GptRepository;
 import com.google.gson.*;
 import lombok.extern.slf4j.Slf4j;
@@ -13,9 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Slf4j
@@ -41,19 +38,18 @@ public class GptServiceImpl implements GptService {
             // GPT API 응답 수신
             // 화면출력을 위한 메시지 추출 처리 ? 필요할 지모르겠네.
 
-            GptRequestMessages gptRequestMessages = new GptRequestMessages(); // GptRequestMessages의 객체 생성
+            Message gptRequestMessages = new Message(); // GptRequestMessages의 객체 생성
             gptRequestMessages.setRole("user");
             gptRequestMessages.setContent(message); // GptRequestMessages의 인스턴스에 필드 값 set
 
             gptRepository.saveGptResponse(gptRequestMessages); // GptRequestMessages의 객체 List메모리 저장소에 저장
             log.info("!!!!!!!! {}", gptRepository.listGptRequestMessages());
 
-            GptRequest gptRequest = new GptRequest(); // GptRequest의 객체 생성 후
-            gptRequest.setModel("gpt-3.5-turbo"); // GptRequest의 인스턴스에 필드값 set
-            gptRequest.setMessages(gptRepository.listGptRequestMessages());  // GptRequest인스턴스의 Message에 List메모리 저장소 저장
+            ChatCompletion chatCompletion = new ChatCompletion(); // GptRequest의 객체 생성
+            chatCompletion.setMessages(gptRepository.listGptRequestMessages());  // GptRequest인스턴스의 Message에 List메모리 저장소 저장
 
             Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create(); // Gson 객체 생성
-            String gptRequestJsonObject = gson.toJson(gptRequest); // gptRequest를 Json형식으로 변형
+            String gptRequestJsonObject = gson.toJson(chatCompletion); // gptRequest를 Json형식으로 변형
 
             HttpHeaders headers = new HttpHeaders(); // HttpClient의 header 객체 생성
             headers.setBearerAuth(openAiKey); // header의 인증키 set
@@ -79,7 +75,7 @@ public class GptServiceImpl implements GptService {
                 role =  gptResponseMessage.getAsJsonObject().get("role").getAsString();
             }
 
-            GptRequestMessages requestMessages = new GptRequestMessages();
+            Message requestMessages = new Message();
             requestMessages.setContent(response);
             requestMessages.setRole(role);
             gptRepository.saveGptResponse(requestMessages);

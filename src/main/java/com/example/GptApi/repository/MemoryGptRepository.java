@@ -1,6 +1,6 @@
 package com.example.GptApi.repository;
 
-import com.example.GptApi.model.GptRequestMessages;
+import com.example.GptApi.model.Message;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -9,16 +9,16 @@ import java.util.List;
 @Component
 public class MemoryGptRepository implements GptRepository {
 
-    private static List<GptRequestMessages> gptRequestMessagesList = new ArrayList<>();
+    private static List<Message> messageList = new ArrayList<>();
 
     @Override
-    public void saveGptResponse(GptRequestMessages RequestMessages) {
-        gptRequestMessagesList.add(RequestMessages);
+    public void saveGptResponse(Message RequestMessages) {
+        messageList.add(RequestMessages);
     }
 
     @Override
-    public List<GptRequestMessages> listGptRequestMessages() {
-        return gptRequestMessagesList;
+    public List<Message> listGptRequestMessages() {
+        return messageList;
     }
 }
 

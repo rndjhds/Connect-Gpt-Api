@@ -1,12 +1,12 @@
 package com.example.GptApi.repository;
 
-import com.example.GptApi.model.GptRequestMessages;
+import com.example.GptApi.model.Message;
 
 import java.util.List;
 
 public interface GptRepository {
 
-    public void saveGptResponse(GptRequestMessages gptRequestMessages);
+    public void saveGptResponse(Message message);
 
-    public List<GptRequestMessages> listGptRequestMessages();
+    public List<Message> listGptRequestMessages();
 }

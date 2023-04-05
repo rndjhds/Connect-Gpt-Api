@@ -1,13 +1,12 @@
 package com.example.GptApi.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class GptRequest {
+public class ChatCompletion {
 
-    private String model;
+    private final String model = "gpt-3.5-turbo";
 
-    private List<GptRequestMessages> messages;
+    private List<Message> messages;
 
     @Override
     public String toString() {
@@ -21,19 +20,15 @@ public class GptRequest {
         return model;
     }
 
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public List<GptRequestMessages> getMessages() {
+    public List<Message> getMessages() {
         return messages;
     }
 
-    public void setMessages(List<GptRequestMessages> messages) {
+    public void setMessages(List<Message> messages) {
         this.messages = messages;
     }
 
-    public void addMessage(GptRequestMessages messages) {
+    public void addMessage(Message messages) {
         this.messages.add(messages);
     }
 }
