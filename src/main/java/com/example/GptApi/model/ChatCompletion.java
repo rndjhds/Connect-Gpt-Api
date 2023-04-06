@@ -8,6 +8,13 @@ public class ChatCompletion {
 
     private List<Message> messages;
 
+    public ChatCompletion(List<Message> messages) {
+        this.messages = messages;
+    }
+
+    public ChatCompletion() {
+    }
+
     @Override
     public String toString() {
         return "GptRequest{" +

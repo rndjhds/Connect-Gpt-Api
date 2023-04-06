@@ -6,6 +6,14 @@ public class Message {
 
     private String content;
 
+    public Message(String role, String content) {
+        this.role = role;
+        this.content = content;
+    }
+
+    public Message() {
+    }
+
     @Override
     public String toString() {
         return "GptRequestMessages{" +

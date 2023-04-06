@@ -9,7 +9,7 @@ import java.util.List;
 @Component
 public class MemoryGptRepository implements GptRepository {
 
-    private static List<Message> messageList = new ArrayList<>();
+    public static List<Message> messageList = new ArrayList<>();
 
     @Override
     public void saveGptResponse(Message RequestMessages) {
