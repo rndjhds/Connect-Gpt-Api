@@ -36,12 +36,9 @@ public class ChatServiceImpl implements ChatService {
         try {
 
             Message gptRequestMessages = new Message("user", message);
-
             chatRepository.saveGptResponse(gptRequestMessages);
-            log.info("!!!!!!!! {}", chatRepository.listGptRequestMessages());
 
             ChatCompletion chatCompletion = new ChatCompletion(chatRepository.listGptRequestMessages());
-
             String gptRequestJsonObject = JsonUtil.getJson(chatCompletion);
 
             HttpEntity<String> httpEntity = HttpUtil.getStringHttpEntity(gptRequestJsonObject, openAiKey);
@@ -52,7 +49,7 @@ public class ChatServiceImpl implements ChatService {
 
             JsonObject gptResponseJsonObject = JsonUtil.getJsonObject(body);
 
-            Message requestMessages = (Message) ObjectUtil.getResult(gptResponseJsonObject);
+            Message requestMessages = ObjectUtil.getResult(gptResponseJsonObject);
             chatRepository.saveGptResponse(requestMessages);
 
             return requestMessages.getContent();
