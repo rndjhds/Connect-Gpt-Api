@@ -60,6 +60,8 @@ public class ChatServiceImpl implements ChatService {
             return "JSON 요소가 잘못 구성되어 있거나 문법적으로 잘못되어서 발생했습니다..";
         } catch (IllegalStateException e) {
             return "JsonElement가 JsonObject인지 확인해 주세요.";
+        } catch (OutOfMemoryError){
+            return "메모리가 너무 많이 찼습니다.";
         }
     }
 }
