@@ -2,27 +2,26 @@ package com.example.GptApi.service;
 
 import com.example.GptApi.model.ChatCompletion;
 import com.example.GptApi.model.Message;
-import com.example.GptApi.repository.GptRepository;
+import com.example.GptApi.repository.ChatRepository;
 import com.example.GptApi.utils.HttpUtil;
 import com.example.GptApi.utils.JsonUtil;
-import com.example.GptApi.utils.Stringutil;
+import com.example.GptApi.utils.ObjectUtil;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 
 @Service
 @Slf4j
-public class GptServiceImpl implements GptService {
+public class ChatServiceImpl implements ChatService {
 
-    private final GptRepository gptRepository;
+    private final ChatRepository chatRepository;
 
-    public GptServiceImpl(GptRepository gptRepository) {
-        this.gptRepository = gptRepository;
+    public ChatServiceImpl(ChatRepository chatRepository) {
+        this.chatRepository = chatRepository;
     }
 
     @Value("${open_ai_key}")
@@ -38,10 +37,10 @@ public class GptServiceImpl implements GptService {
 
             Message gptRequestMessages = new Message("user", message);
 
-            gptRepository.saveGptResponse(gptRequestMessages);
-            log.info("!!!!!!!! {}", gptRepository.listGptRequestMessages());
+            chatRepository.saveGptResponse(gptRequestMessages);
+            log.info("!!!!!!!! {}", chatRepository.listGptRequestMessages());
 
-            ChatCompletion chatCompletion = new ChatCompletion(gptRepository.listGptRequestMessages());
+            ChatCompletion chatCompletion = new ChatCompletion(chatRepository.listGptRequestMessages());
 
             String gptRequestJsonObject = JsonUtil.getJson(chatCompletion);
 
@@ -53,8 +52,8 @@ public class GptServiceImpl implements GptService {
 
             JsonObject gptResponseJsonObject = JsonUtil.getJsonObject(body);
 
-            Message requestMessages = Stringutil.getResult(gptResponseJsonObject);
-            gptRepository.saveGptResponse(requestMessages);
+            Message requestMessages = (Message) ObjectUtil.getResult(gptResponseJsonObject);
+            chatRepository.saveGptResponse(requestMessages);
 
             return requestMessages.getContent();
             // 응답 완료 후 데이터 처리

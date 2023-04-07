@@ -1,6 +1,6 @@
 package com.example.GptApi.controller;
 
-import com.example.GptApi.service.GptService;
+import com.example.GptApi.service.ChatService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @Slf4j
-public class GptController {
+public class ChatController {
 
-    private final GptService gptService;
+    private final ChatService chatService;
 
-    public GptController(GptService gptService) {
-        this.gptService = gptService;
+    public ChatController(ChatService chatService) {
+        this.chatService = chatService;
     }
 
     @GetMapping("/requestForm")
@@ -29,7 +29,7 @@ public class GptController {
 
         log.info("요청 데이터 : " + requestMessage);
 
-        String responseMessage = gptService.responseGptApi(requestMessage);
+        String responseMessage = chatService.responseGptApi(requestMessage);
 
         log.info("응답 데이터 : " + responseMessage);
 

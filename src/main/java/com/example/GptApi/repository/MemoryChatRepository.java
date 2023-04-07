@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class MemoryGptRepository implements GptRepository {
+public class MemoryChatRepository implements ChatRepository {
 
     public static List<Message> messageList = new ArrayList<>();
 

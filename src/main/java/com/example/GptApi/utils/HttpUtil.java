@@ -21,10 +21,10 @@ public class HttpUtil {
         return headers;
     }
 
-    public static String getStringResponseEntity(HttpEntity<String> httpEntity, String openAiUrl) {
+    public static String getStringResponseEntity(HttpEntity<String> httpEntity, String url) {
         RestTemplate restTemplate = new RestTemplate(); // spring 프레임워크의 http call 메서드 생성
 
-        ResponseEntity<String> gptResponseEntity = restTemplate.exchange(openAiUrl, HttpMethod.POST, httpEntity, String.class);
+        ResponseEntity<String> gptResponseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
 
         return gptResponseEntity.getBody();
     }

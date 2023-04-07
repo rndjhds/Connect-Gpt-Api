@@ -1,6 +1,6 @@
 package com.example.GptApi.service;
 
-public interface GptService {
+public interface ChatService {
 
     public String responseGptApi(String message);
 
