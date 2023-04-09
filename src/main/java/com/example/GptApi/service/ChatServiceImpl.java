@@ -5,7 +5,7 @@ import com.example.GptApi.model.Message;
 import com.example.GptApi.repository.ChatRepository;
 import com.example.GptApi.utils.HttpUtil;
 import com.example.GptApi.utils.JsonUtil;
-import com.example.GptApi.utils.ObjectUtil;
+import com.example.GptApi.utils.openAIUtil;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import lombok.extern.slf4j.Slf4j;
@@ -35,25 +35,25 @@ public class ChatServiceImpl implements ChatService {
 
         try {
 
-            Message gptRequestMessages = new Message("user", message);
-            chatRepository.saveGptResponse(gptRequestMessages);
+            saveMemoryRepository("user", message);
 
-            ChatCompletion chatCompletion = new ChatCompletion(chatRepository.listGptRequestMessages());
-            String gptRequestJsonObject = JsonUtil.getJson(chatCompletion);
+            ChatCompletion chatCompletion = new ChatCompletion(chatRepository.displayListMessage());
+            String chatCompletionToJson = JsonUtil.createObjectToJson(chatCompletion);
 
-            HttpEntity<String> httpEntity = HttpUtil.getStringHttpEntity(gptRequestJsonObject, openAiKey);
+            HttpEntity<String> httpEntity = HttpUtil.createStringHttpEntity(chatCompletionToJson, openAiKey);
             log.info("GPT 요청 데이터 : {}", httpEntity.toString());
 
-            String body = HttpUtil.getStringResponseEntity(httpEntity, openAiUrl);
-            log.info("GPT 응답 데이터 : {}", body);
+            String chatResponseEntityBody = HttpUtil.createStringResponseEntity(httpEntity, openAiUrl);
+            log.info("GPT 응답 데이터 : {}", chatResponseEntityBody);
 
-            JsonObject gptResponseJsonObject = JsonUtil.getJsonObject(body);
+            JsonObject chatToJsonObject = JsonUtil.createStringToJsonObject(chatResponseEntityBody);
 
-            Message requestMessages = ObjectUtil.getResult(gptResponseJsonObject);
-            chatRepository.saveGptResponse(requestMessages);
+            String chatContent = openAIUtil.createStringFromJsonObject(chatToJsonObject, "content");
+            String chatRole = openAIUtil.createStringFromJsonObject(chatToJsonObject,"role");
+            saveMemoryRepository(chatRole, chatContent);
 
-            return requestMessages.getContent();
-            // 응답 완료 후 데이터 처리
+            return chatContent;
+
         } catch (RestClientException e) {
             return "서버 응답 에러가 발생했습니다.";
         } catch (JsonSyntaxException e) {
@@ -63,5 +63,10 @@ public class ChatServiceImpl implements ChatService {
         } catch (OutOfMemoryError e){
             return "메모리가 너무 많이 찼습니다.";
         }
+    }
+
+    private void saveMemoryRepository(String user, String message) {
+        Message gptRequestMessages = new Message(user, message);
+        chatRepository.saveMessage(gptRequestMessages);
     }
 }

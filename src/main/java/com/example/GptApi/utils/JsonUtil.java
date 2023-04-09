@@ -7,15 +7,15 @@ import com.google.gson.JsonObject;
 
 public class JsonUtil {
 
-    public static String getJson(Object object) {
+    public static String createObjectToJson(Object object) {
         Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 
         return gson.toJson(object);
     }
 
-    public static JsonObject getJsonObject(String body) {
+    public static JsonObject createStringToJsonObject(String stringTypeJson) {
         Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 
-        return gson.fromJson(body, JsonObject.class);
+        return gson.fromJson(stringTypeJson, JsonObject.class);
     }
 }

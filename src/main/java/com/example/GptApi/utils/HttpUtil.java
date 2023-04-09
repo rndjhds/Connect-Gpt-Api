@@ -5,27 +5,25 @@ import org.springframework.web.client.RestTemplate;
 
 public class HttpUtil {
 
-    public static HttpEntity<String> getStringHttpEntity(String httpBody, String key) {
-        HttpHeaders headers = getHttpHeaders(key, MediaType.APPLICATION_JSON);
-
+    public static HttpEntity<String> createStringHttpEntity(String httpBody, String apiKey) {
+        HttpHeaders headers = createHttpHeaders(apiKey, MediaType.APPLICATION_JSON);
         HttpEntity<String> httpEntity = new HttpEntity<>(httpBody, headers);
 
         return httpEntity;
     }
 
-    private static HttpHeaders getHttpHeaders(String key, MediaType type) {
-        HttpHeaders headers = new HttpHeaders(); // HttpClient의 header 객체 생성
-        headers.setBearerAuth(key); // header의 인증키 set
-        headers.setContentType(type);
+    private static HttpHeaders createHttpHeaders(String key, MediaType mediaType) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(key);
+        headers.setContentType(mediaType);
 
         return headers;
     }
 
-    public static String getStringResponseEntity(HttpEntity<String> httpEntity, String url) {
-        RestTemplate restTemplate = new RestTemplate(); // spring 프레임워크의 http call 메서드 생성
+    public static String createStringResponseEntity(HttpEntity<String> httpEntity, String URL) {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> responseEntity = restTemplate.exchange(URL, HttpMethod.POST, httpEntity, String.class);
 
-        ResponseEntity<String> gptResponseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
-
-        return gptResponseEntity.getBody();
+        return responseEntity.getBody();
     }
 }
