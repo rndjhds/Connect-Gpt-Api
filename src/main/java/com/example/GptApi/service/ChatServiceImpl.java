@@ -61,7 +61,7 @@ public class ChatServiceImpl implements ChatService {
         } catch (IllegalStateException e) {
             return "JsonElement가 JsonObject인지 확인해 주세요.";
         } catch (OutOfMemoryError e){
-            return "메모리가 너무 많이 찼습니다.";
+            return "메모리를 확인해주세요";
         }
     }
 
