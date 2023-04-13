@@ -12,12 +12,12 @@ public class MemoryChatRepository implements ChatRepository {
     public static List<Message> messageList = new ArrayList<>();
 
     @Override
-    public void saveMessage(Message RequestMessages) {
+    public void save(Message RequestMessages) {
         messageList.add(RequestMessages);
     }
 
     @Override
-    public List<Message> displayListMessage() {
+    public List<Message> listGptRequestMessages() {
         return messageList;
     }
 }

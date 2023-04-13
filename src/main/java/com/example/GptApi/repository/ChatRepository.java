@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ChatRepository {
 
-    public void saveMessage(Message message);
+    public void save(Message message);
 
-    public List<Message> displayListMessage();
+    public List<Message> listGptRequestMessages();
 }

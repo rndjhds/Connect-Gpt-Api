@@ -30,6 +30,7 @@ public class ChatServiceImpl implements ChatService {
     @Value("${open_ai_url}")
     private String openAiUrl;
 
+    //
     @Override
     public String responseGptApi(String message) {
 
@@ -37,7 +38,7 @@ public class ChatServiceImpl implements ChatService {
 
             saveMemoryRepository("user", message);
 
-            ChatCompletion chatCompletion = new ChatCompletion(chatRepository.displayListMessage());
+            ChatCompletion chatCompletion = new ChatCompletion(chatRepository.listGptRequestMessages());
             String chatCompletionToJson = JsonUtil.createObjectToJson(chatCompletion);
 
             HttpEntity<String> httpEntity = HttpUtil.createStringHttpEntity(chatCompletionToJson, openAiKey);
@@ -65,8 +66,8 @@ public class ChatServiceImpl implements ChatService {
         }
     }
 
-    private void saveMemoryRepository(String user, String message) {
-        Message gptRequestMessages = new Message(user, message);
-        chatRepository.saveMessage(gptRequestMessages);
+    private void saveMemoryRepository(String role, String content) {
+        Message gptRequestMessage = new Message(role, content);
+        chatRepository.save(gptRequestMessage);
     }
 }

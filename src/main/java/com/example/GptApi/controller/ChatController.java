@@ -27,11 +27,11 @@ public class ChatController {
     @ResponseBody
     public String requestMessageToGpt(@RequestParam("requestMessage") String requestMessage) {
 
-        log.info("요청 데이터 : " + requestMessage);
+        log.info("요청 데이터 : {}", requestMessage);
 
         String responseMessage = chatService.responseGptApi(requestMessage);
 
-        log.info("응답 데이터 : " + responseMessage);
+        log.info("응답 데이터 : {}", responseMessage);
 
         return responseMessage;
     }
